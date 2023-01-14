@@ -27,6 +27,7 @@ app.views.BookListView = Backbone.View.extend({
     },
 
     render: function () {
+        console.log("testing kavindu");
         this.$el.empty();   // empty previous results view
         _.each(this.model.models, function (bookitem) {
             this.$el.append(new app.views.BookListItemView({model: bookitem}).render().el);

@@ -20,6 +20,9 @@ app.models.BookItem = Backbone.Model.extend({
             "book_name": this.get('book_name'),
             "author": this.get('author'),
             "status": this.get('status')
+            // "book_name": this.get('postId'),
+            // "author": this.get('createdDate'),
+            // "status": this.get('userEmail')
         };
     }
 });

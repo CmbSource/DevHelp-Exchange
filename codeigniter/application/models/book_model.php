@@ -2,13 +2,62 @@
 class Book_model extends CI_Model
 {
     private $table_book = 'book';
+    private $table_post = 'post';
+    private $table_question = 'question';
     //private $db1;
 
     public function __construct()
     {
         $this->load->database();
     }
-        //getbook by id
+
+    //getPost by id
+    public function  getPostById($id)
+    {
+        if(is_numeric($id)) {
+            $this->db->where('postId', $id);
+            $query = $this->db->get($this->table_post);
+            return $query->row(0);
+        }
+        else
+            return null;
+    }
+
+    //getAllPosts
+    public function getAllPosts()
+    {
+        $this->db->select("postId,userEmail,createdDate");
+        $this->db->order_by("createdDate");
+        $this->db->limit(10);
+        $query = $this->db->get($this->table_post);
+        return $query->result();
+    }
+
+    //getQuestion by id
+    public function  getQuestionById($id)
+    {
+        if(is_numeric($id)) {
+            $this->db->where('questionId', $id);
+            $query = $this->db->get($this->table_question);
+            return $query->row(0);
+        }
+        else
+            return null;
+    }
+
+    //getAllQuestions
+    public function getAllQuestions()
+    {
+        $this->db->select("postId,userEmail,questionId,questionTitle,questionState");
+        $this->db->order_by("rand()");
+        $this->db->limit(10);
+        $query = $this->db->get($this->table_question);
+        return $query->result();
+    }
+
+
+
+    //getbook by id
     public function  getBookById($id)
     {
         if(is_numeric($id)) {
@@ -22,7 +71,7 @@ class Book_model extends CI_Model
         // return random books for home view
     public function getRandomBooks()
     {
-        $this->db->select("book_name,id");
+        $this->db->select("id,book_name");
         $this->db->order_by("rand()");
         $this->db->limit(10);
         $query = $this->db->get($this->table_book);
