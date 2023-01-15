@@ -2,13 +2,62 @@
 class Book_model extends CI_Model
 {
     private $table_book = 'book';
+    private $table_post = 'post';
+    private $table_question = 'question';
     //private $db1;
 
     public function __construct()
     {
         $this->load->database();
     }
-        //getbook by id
+
+    //getPost by id
+    public function  getPostById($id)
+    {
+        if(is_numeric($id)) {
+            $this->db->where('postId', $id);
+            $query = $this->db->get($this->table_post);
+            return $query->row(0);
+        }
+        else
+            return null;
+    }
+
+    //getAllPosts
+    public function getAllPosts()
+    {
+        $this->db->select("postId,userEmail,createdDate");
+        $this->db->order_by("createdDate");
+        $this->db->limit(10);
+        $query = $this->db->get($this->table_post);
+        return $query->result();
+    }
+
+    //getQuestion by id
+    public function  getQuestionById($id)
+    {
+        if(is_numeric($id)) {
+            $this->db->where('questionId', $id);
+            $query = $this->db->get($this->table_question);
+            return $query->row(0);
+        }
+        else
+            return null;
+    }
+
+    //getAllQuestions
+    public function getAllQuestions()
+    {
+        $this->db->select("postId,userEmail,questionId,questionTitle,questionState");
+        $this->db->order_by("rand()");
+        $this->db->limit(10);
+        $query = $this->db->get($this->table_question);
+        return $query->result();
+    }
+
+
+
+    //getbook by id
     public function  getBookById($id)
     {
         if(is_numeric($id)) {
@@ -22,7 +71,7 @@ class Book_model extends CI_Model
         // return random books for home view
     public function getRandomBooks()
     {
-        $this->db->select("book_name,id");
+        $this->db->select("id,book_name");
         $this->db->order_by("rand()");
         $this->db->limit(10);
         $query = $this->db->get($this->table_book);
@@ -33,6 +82,34 @@ class Book_model extends CI_Model
     public function saveBook($book)
     {
         $status = $book["status"];
+        $book_tab = 'book';
+
+        foreach ($book as $value) {
+            echo $value;
+        }
+
+        $data = array();
+
+        foreach ($book as $value) {
+            $data[] = $value;
+        }
+
+        $data[] = "user-id";
+
+        foreach ($data as $cc) {
+            echo "$cc <**>" ;
+        }
+        echo "------------";
+        echo $data[1];
+        echo "------------";
+        echo $data[2];
+        echo "------------";
+        echo $data[0];
+
+        date_default_timezone_set('Asia/Colombo');
+        $createdDate = date('Y-m-d h:i:s');
+        echo $createdDate;
+
         if(!(is_numeric($status) && $status>=0 && $status <=2)) {  //checking status instead of using a trigger
             return ;
         }
@@ -40,7 +117,7 @@ class Book_model extends CI_Model
             $this->db->where("book_name",$book["book_name"]);
             $checkBook = $this->db->get($this->table_book);  //check if book already exists
             if ($checkBook->num_rows == 0) {
-                $insertQuery=$this->db->insert('book',$book);
+                $insertQuery=$this->db->insert($book_tab,$book);
                 return $this->db->insert_id();
             }
             else return 0; // return 0 if book already exists

@@ -6,6 +6,36 @@ class bookapp extends CI_Controller {
         $this->load->model('book_model');
     }
 
+
+    public function mainPost()
+    {
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'GET':
+                if(func_num_args() && is_numeric(func_get_arg(0))) {
+                    $this->getPostById(func_get_arg(0));
+                }
+                else {
+                    $this->getAllPosts();
+                }
+                break;
+        }
+    }
+
+    public function questionPost()
+    {
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'GET':
+                if(func_num_args() && is_numeric(func_get_arg(0))) {
+                    $this->getQuestionById(func_get_arg(0));
+                }
+                else {
+                    $this->getAllQuestions();
+                }
+                break;
+        }
+    }
+
+
     //delegates
     public function index()
     {
@@ -49,6 +79,30 @@ class bookapp extends CI_Controller {
             break;
             //end of delete case
         }
+    }
+
+    public function getPostById($id)
+    {
+        $data['posts']=$this->book_model->getPostById($id);
+        $this->load->view('pages/posts', $data);
+    }
+
+    public function getAllPosts()
+    {
+        $data['posts']=$this->book_model->getAllPosts();
+        $this->load->view('pages/posts', $data);
+    }
+
+    public function getQuestionById($id)
+    {
+        $data['posts']=$this->book_model->getQuestionById($id);
+        $this->load->view('pages/posts', $data);
+    }
+
+    public function getAllQuestions()
+    {
+        $data['posts']=$this->book_model->getAllQuestions();
+        $this->load->view('pages/posts', $data);
     }
 
     public function getBookByid($id)
