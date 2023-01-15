@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2019 - 2022, CodeIgniter Foundation
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @copyright	Copyright (c) 2019 - 2022, CodeIgniter Foundation (https://codeigniter.com/)
- * @license	https://opensource.org/licenses/MIT	MIT License
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.3.0
  * @filesource
@@ -49,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Drivers
  * @category	Database
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/userguide3/database/
+ * @link		https://codeigniter.com/user_guide/database/
  */
 class CI_DB_mssql_driver extends CI_DB {
 
@@ -353,7 +352,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	 * Error
 	 *
 	 * Returns an array containing code and message of the last
-	 * database error that has occurred.
+	 * database error that has occured.
 	 *
 	 * @return	array
 	 */
@@ -454,7 +453,7 @@ class CI_DB_mssql_driver extends CI_DB {
 			$sql = trim(substr($sql, 0, strrpos($sql, $orderby)));
 
 			// Get the fields to select from our subquery, so that we can avoid CI_rownum appearing in the actual results
-			if (count($this->qb_select) === 0 OR strpos(implode(',', $this->qb_select), '*') !== FALSE)
+			if (count($this->qb_select) === 0)
 			{
 				$select = '*'; // Inevitable
 			}
@@ -501,7 +500,7 @@ class CI_DB_mssql_driver extends CI_DB {
 			return parent::_insert_batch($table, $keys, $values);
 		}
 
-		return ($this->db_debug) ? $this->display_error('db_unsupported_feature') : FALSE;
+		return ($this->db->db_debug) ? $this->db->display_error('db_unsupported_feature') : FALSE;
 	}
 
 	// --------------------------------------------------------------------

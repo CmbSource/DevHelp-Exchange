@@ -2,61 +2,56 @@
 
 include 'User.php';
 
-class UserManager extends CI_Model {
+class UserManager_Model extends CI_Model {
 
-	/**
-	 * checks if the user login credentials are correct
-	 * @param $userName  username entered by the user in the login
-	 * @param $password password entered by the user in login
-	 * @return array list of user data if the user login credentials are correct
-	 */
-	public function ConfirmUser($userName, $password) {
+
+	public function ConfirmUser($userEmail, $password) {
         $this->db->where('userEmail', $userEmail);
         $res = $this->db->get('user');
+
         $data = array();
         if ($res->num_rows() == 1) {
-
+			
             $row = $res->row();
-
-            if (password_verify($password, $row->Password)) {
+			if (password_verify($password, $row->password)) {
                 $data = array(
                     'userName' => $row->userName,
                     'points' => $row->points,
-                    'numberOfQuestions' => $row->numberOfQuestions,
+                    'numberOfQuestion' => $row->numberOfQuestion,
                     'numberOfReplies' => $row->numberOfReplies);
 
                 return $data;
             } else {
-                return $data;
+				$message = [
+					'userEmail' => $userEmail,
+					'message' => 'Incorrect Passowrd!'
+				];
+                return $message;
             }
         } else {
-            return $data;
+			$message = [
+				'userEmail' => $userEmail,
+				'message' => 'Invalid User Email or Password!'
+			];
+            return $message;
         }
     }
 
-	/**
-	 * adds a new user to database
-	 * @param $userName desired user name of the user
-	 * @param $password desired password of the usur
-	 * @param $firstName first name of the user
- 	 * @param $lastName last name of the user
-	 * @param $avatar avatar url that is displayed in the profile
-	 * @param $favGenreList favorite genres of the user
-	 */
 	public function RegisterUser($userName, $userEmail, $password) {
 
 		$points = 0;
-		$numberOfQuestions = 0;
+		$numberOfQuestion = 0;
 		$numberOfReplies = 0;
 
 		$user_tab = 'user';
 
+		$hash = password_hash($password, PASSWORD_DEFAULT);
         $data = array(
             'userName' => $userName,
-            'Password' => password_hash($password, PASSWORD_DEFAULT),
+            'password' => $hash,
             'userEmail' => $userEmail,
             'points' => $points,
-            'numberOfQuestions' => $numberOfQuestions,
+            'numberOfQuestion' => $numberOfQuestion,
 			'numberOfReplies' => $numberOfReplies
         );
 
@@ -65,34 +60,34 @@ class UserManager extends CI_Model {
         $this->db->where('userEmail', $userEmail);
         $res = $this->db->get($user_tab);
         $user = $res->row();
+		return $res->result();
 
-		//For the leader board
-        // foreach ($leaderBoardist as $leaderBoard) {
-        //     $data = array(
-        //         'UserToken' => $user->UserToken,
-        //         'GenreId' => $favgenre
-        //     );
-
-        //     $this->db->insert('userfavgenres', $data);
-        // }
     }
 
-	/**
-	 * gets the user data and  checks if the user is followed or not
-	 * @param $userToken user token of the user which the data is required
-	 * @param $myUserToken user token of the logged in user
-	 * @return User returns an user object with user data
-	 */
-
-	public function GetUser($userEmail, $myUserEmail) {
-		$this->db->select('u.userEmail, u.userName, u.points, u.numberOfQuestions, u.numberOfReplies' );
+	public function GetUserByEmail($userEmail) {
+		$this->db->select('u.userEmail, u.userName, u.points, u.numberOfQuestion, u.numberOfReplies' );
 		$this->db->from('user u');
         $this->db->where('u.userEmail', $userEmail);
         $res = $this->db->get();
-        $row = $res->row();
-        $user = new User($row->userEmail, $row->userName, $row->points, $row->numberOfQuestions, $row->numberOfReplies, 0);
-        return $user;
+        //$row = $res->row();
+        //$user = new User($row->userEmail, $row->userName, $row->points, $row->numberOfQuestion, $row->numberOfReplies, 0);
+        return $res->result();
     }
+
+	public function GetUsers() {
+		$this->db->select('u.userEmail, u.userName, u.points, u.numberOfQuestion, u.numberOfReplies' );
+		$this->db->from('user u');
+        $res = $this->db->get();
+        //$row = $res->row();
+        //$user = new User($row->userEmail, $row->userName, $row->points, $row->numberOfQuestion, $row->numberOfReplies, 0);
+		//$res->result();
+        return $res->result();
+    }
+	
+	public function UpdateUser($userEmail, $password)
+	{
+		$data = $this->ConfirmUser($userEmail, $password);
+	}
 
 
 
