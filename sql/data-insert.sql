@@ -69,3 +69,27 @@ VALUES(
     'Size exceeded for custom field',
     'Not Answered'
 );
+
+INSERT INTO `reply`(
+    `postId`,
+    `questionId`,
+    `replyId`,
+    `userEmail`,
+    `content`,
+    `replyState`
+)
+VALUES(
+    '1',
+    '5',
+    NULL,
+    'test@outlook.com',
+    'change datatype to double',
+    'not solved'
+),(
+    '1',
+    '5',
+    NULL,
+    'kavindu@gmail.com',
+    'type casting will solve the issue',
+    'Solved'
+);

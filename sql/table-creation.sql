@@ -32,3 +32,19 @@ CREATE TABLE `w1761405_0`.`question`(
 ALTER TABLE question
 ADD FOREIGN KEY (userEmail) REFERENCES user(userEmail),
 ADD FOREIGN KEY (postId) REFERENCES post(postId);
+
+
+CREATE TABLE `w1761405_0`.`reply`(
+    `postId` INT(10) NOT NULL,
+    `questionId` INT(10) NOT NULL,
+    `replyId` INT(10) NOT NULL AUTO_INCREMENT,
+    `userEmail` VARCHAR(255) NOT NULL,
+    `content` VARCHAR(255) NOT NULL,
+    `replyState` VARCHAR(255) NOT NULL,
+    PRIMARY KEY(`replyId`)
+) ENGINE = InnoDB;
+
+ALTER TABLE reply
+ADD FOREIGN KEY (userEmail) REFERENCES user(userEmail),
+ADD FOREIGN KEY (postId) REFERENCES post(postId),
+ADD FOREIGN KEY (questionId) REFERENCES question(questionId);
