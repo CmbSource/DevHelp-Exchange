@@ -96,6 +96,19 @@ class PostManager_Model extends CI_Model
             return null;
     }
 
+    //Get Post Id by id
+    public function  getPostIdById($id)
+    {
+        if(is_numeric($id)) {
+            $this->db->select("postId");
+            $this->db->where('questionId', $id);
+            $query = $this->db->get($this->table_question);
+            return $query->row(0);
+        }
+        else
+            return null;
+    }
+
     //Get All Questions
     public function getAllQuestions()
     {
@@ -111,11 +124,17 @@ class PostManager_Model extends CI_Model
     {
         $tab = 'question';
 
+        $postId = $this->createPost($question);
+
+        $userEmail = $question['userEmail'];
+        $questionTitle = $question['questionTitle'];
+        $content = $question['content'];
+
         $data = array(
-            'postId' => $question[0],
-			'userEmail' => $question[1],
-            'questionTitle' => $question[2],
-			'content' => $question[3],
+            'postId' => $postId,
+			'userEmail' => $userEmail,
+            'questionTitle' => $questionTitle,
+			'content' => $content,
             'questionState' => 'Not Answered'
 		);
 
@@ -150,7 +169,7 @@ class PostManager_Model extends CI_Model
     //Get All Replies
     public function getAllReplies()
     {
-        $this->db->select("questionId","replyId","userEmail","content","replyState");
+        $this->db->select("questionId,replyId,userEmail,content,replyState");
         $this->db->order_by("replyId");
         $this->db->limit(10);
         $query = $this->db->get($this->table_reply);
@@ -158,16 +177,21 @@ class PostManager_Model extends CI_Model
     }
 
     //Create Reply
-    public function createReply($post)
+    public function createReply($reply)
     {
         $tab = 'reply';
 
+        $postId = $this->createPost($reply);
+        $questionId = $reply['questionId'];
+        $userEmail = $reply['userEmail'];
+        $content = $reply['content'];
+
         $data = array(
-            'postId' => $question[0],
-            'questionId' => $question[1],
-			'userEmail' => $question[2],
-			'content' => $question[3],
-            'questionState' => 'Not Answered'
+            'postId' => $postId,
+            'questionId' => $questionId,
+			'userEmail' => $userEmail,
+			'content' => $content,
+            'replyState' => 'Not Answered'
 		);
 
         $insertQuery=$this->db->insert($tab, $data);

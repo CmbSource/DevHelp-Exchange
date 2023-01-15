@@ -1,5 +1,5 @@
 <?php
-class PostController extends CI_Controller {
+class ReplyController extends CI_Controller {
 
     function  __construct(){
         parent::__construct();
@@ -11,48 +11,48 @@ class PostController extends CI_Controller {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
                 if(func_num_args() && is_numeric(func_get_arg(0))) {
-                    $this->getPostById(func_get_arg(0));
+                    $this->getReplyById(func_get_arg(0));
                 }
                 else {
-                    $this->getAllPosts();
+                    $this->getAllReplies();
                 }
                 break;
             case 'POST':
-                $this->createPost();
+                $this->createReply();
                 break; 
             case 'DELETE':
                 if(func_num_args() && is_numeric(func_get_arg(0))) {
-                    $this->deletePost(func_get_arg(0));
+                    $this->deleteReply(func_get_arg(0));
                 }
                 break;
 
         }
     }
 
-    public function getPostById($id)
+    public function getReplyById($id)
     {
-        $data['posts']=$this->PostManager_Model->getPostById($id);
+        $data['posts']=$this->PostManager_Model->getReplyById($id);
         $this->load->view('pages/posts', $data);
     }
 
-    public function getAllPosts()
+    public function getAllReplies()
     {
-        $data['posts']=$this->PostManager_Model->getAllPosts();
+        $data['posts']=$this->PostManager_Model->getAllReplies();
         $this->load->view('pages/posts', $data);
     }
 
-    public function createPost()
+    public function createReply()
     {       
         $payload=file_get_contents("php://input");
         $post=json_decode($payload,true);
 
-        $data['result']=$this->PostManager_Model->createPost($post);
+        $data['result']=$this->PostManager_Model->createReply($post);
         $this->load->view('pages/add.php',$data);
     }
 
-    public function deletePost($id) 
+    public function deleteReply($id) 
     {
-        $data['result']=$this->PostManager_Model->deletePost($id);
+        $data['result']=$this->PostManager_Model->deleteReply($id);
         $this->load->view('pages/delete.php', $data);
     }
 
