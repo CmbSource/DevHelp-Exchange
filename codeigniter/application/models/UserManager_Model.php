@@ -19,21 +19,44 @@ class UserManager_Model extends CI_Model {
                     'points' => $row->points,
                     'numberOfQuestion' => $row->numberOfQuestion,
                     'numberOfReplies' => $row->numberOfReplies);
-
-                return $data;
+				
+				$message = [
+					'userEmail' => $userEmail,
+					'message' => 'Success user confirmation!'
+				];
+				$finalMsg = [
+					'data' => $data,
+					'retMsg' => $message
+				];
+				
+                return $finalMsg;
             } else {
+				$data = array();
 				$message = [
 					'userEmail' => $userEmail,
 					'message' => 'Incorrect Passowrd!'
 				];
-                return $message;
+
+				$finalMsg = [
+					'data' => $data,
+					'retMsg' => $message
+				];
+
+                return $finalMsg;
             }
         } else {
+			$data = array();
 			$message = [
 				'userEmail' => $userEmail,
 				'message' => 'Invalid User Email or Password!'
 			];
-            return $message;
+
+			$finalMsg = [
+				'data' => $data,
+				'retMsg' => $message
+			];
+
+            return $finalMsg;
         }
     }
 

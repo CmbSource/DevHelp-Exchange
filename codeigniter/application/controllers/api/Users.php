@@ -102,7 +102,7 @@ class Users extends \Restserver\Libraries\REST_Controller {
         $userEmail = $this->post('userEmail');
         $password = $this->post('password');
         $user = $this->UserManager_Model->ConfirmUser($userEmail, $password);
-        $this->set_response($user, \Restserver\Libraries\REST_Controller::HTTP_OK);
+        $this->set_response($user["retMsg"], \Restserver\Libraries\REST_Controller::HTTP_OK);
 
     }
 
