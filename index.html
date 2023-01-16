@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<script type="text/javascript" src="js/lib/jquery-min.js"></script>
 	<script type="text/javascript" src="js/lib/underscore-min.js"></script>
 	<script type="text/javascript" src="js/lib/backbone.js"></script>
 	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>	
+	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript" src="js/models/bookitem.js"></script>
+	<script type="text/javascript" src="js/models/login.js"></script>
+	<script type="text/javascript" src="js/views/loginViewer.js?v=3"> </script>
+	<!-- <script type="text/javascript" src="js/views/loginView.js"></script> -->
 	<script type="text/javascript" src="js/views/bookitemform.js"></script>
 	<script type="text/javascript" src="js/views/editbookview.js"></script>
 	<script type="text/javascript" src="js/views/bookitemview.js"></script>
 	<script type="text/javascript" src="js/views/searchbookview.js"></script>
-	<script type="text/javascript" src="js/routers/approuter.js"></script>
-	
+	<!-- <script type="text/javascript" src="js/routers/approuter.js"></script> -->
+	<script type="text/javascript" src="js/routers/approuter1.js"></script>
+
 	<link href="css/bootstrap.css" rel="stylesheet">
 </head>
 
@@ -62,7 +67,7 @@
 	<input type="text" class="input-medium search-query" id="searchBook_book_name" placeholder="Book name">
 	<button type="button"  id="booksearch_submit" class="btn">Search</button>
 	</form>
-	</script> 
+	</script>
 
 	<!-- end of search book template -->
 	<script type="text/template" id="bookitem_template">
@@ -73,14 +78,24 @@
 	<a href="#edit/<%= postId %>" class="btn btn-link"> <%= userEmail %>  </a>
 	</script>
 
+	<script type="text/template" id="login_template">
+	<div>
+		UserEmail <input type="text" id="login_userEmail" placeholder="UserEmail"><br /><br />
+		Password : <input type="password" id="login_password" placeholder="Password"><br /><br />
+		<!-- <button id="register_submit">REGISTER</button> -->
+		<button id="login_submit">Login</button>
+	</div>
+	</script>
+
 	<!--end of templates -->
-	
-	<h1>Welcome to Shelfari 1.1 </h1>
+
+	<h1>Questionier Website</h1>
 	<div class="container">
 		<ul class="nav nav-pills">
-			<li><a href="#">Books</a></li>
-			<li><a href="#menu-item/addbook">Add Book</a></li>
-			<li><a href="#menu-item/searchbook">Search Book</a></li>
+			<li><a href="#">Questions</a></li>
+			<li><a href="#menu-item/login">Login</a></li>
+			<li><a href="#menu-item/addbook">Add Question</a></li>
+			<li><a href="#menu-item/searchbook">Search Question</a></li>
 		</ul>
 		<div class="container bs-docs-example" id="app">
 		</div>

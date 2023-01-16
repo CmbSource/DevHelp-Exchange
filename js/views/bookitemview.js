@@ -18,8 +18,7 @@ app.views.BookListView = Backbone.View.extend({
     className: "booklist",
 
     initialize: function () {
-        var _this = this; //view refrence
-        console.log("book BookListView initialize");
+        var _this = this; //view reference
         this.model.on("reset", this.render, this);
         this.model.on("add", function (bookitem) {
             _this.$el.append(new app.views.BookListItemView({model: bookitem}).render().el);
@@ -27,7 +26,6 @@ app.views.BookListView = Backbone.View.extend({
     },
 
     render: function () {
-        console.log("testing kavindu");
         this.$el.empty();   // empty previous results view
         _.each(this.model.models, function (bookitem) {
             this.$el.append(new app.views.BookListItemView({model: bookitem}).render().el);

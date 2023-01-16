@@ -21,6 +21,7 @@ class UserManager_Model extends CI_Model {
                     'numberOfReplies' => $row->numberOfReplies);
 				
 				$message = [
+					'status' => 200,
 					'userEmail' => $userEmail,
 					'message' => 'Success user confirmation!'
 				];
@@ -33,6 +34,7 @@ class UserManager_Model extends CI_Model {
             } else {
 				$data = array();
 				$message = [
+					'status' => 401,
 					'userEmail' => $userEmail,
 					'message' => 'Incorrect Passowrd!'
 				];
@@ -47,6 +49,7 @@ class UserManager_Model extends CI_Model {
         } else {
 			$data = array();
 			$message = [
+				'status' => 401,
 				'userEmail' => $userEmail,
 				'message' => 'Invalid User Email or Password!'
 			];

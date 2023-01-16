@@ -10,21 +10,34 @@ app.routers.AppRouter = Backbone.Router.extend({
         "edit/:id": "editbook"
     },
 
-    // login: function () {
-    //     if (!app.loginView) {
-    //         app.loginView = new app.views.LoginView();
-    //     }
-    //     var myview = app.loginView.render().el;
-    //     $('#app').html(myview);
-    // },
-
     login: function () {
-        if (!app.searchView) {
-            app.searchView = new app.views.SearchBookView();
+        if (!app.loginView) {
+            app.loginView = new app.views.LoginView();
         }
-        var myview = app.searchView.render().el;
+        var myview = app.loginView.render().el;
         $('#app').html(myview);
     },
+
+    // login: function () {
+    //     if (!app.randomBooksView) {
+    //         app.randomBooksView = new app.views.BookListView({ model: new app.collections.BookItemCollection() });
+    //     }
+    //     $('#app').html("loading...");
+    //     app.randomBooksView.model.fetch({reset: true,
+    //         success: function () {
+    //             var myview = app.randomBooksView.render().el;
+    //             $('#app').html(myview);
+    //         }
+    //         });
+    // },
+
+    // login: function () {
+    //     if (!app.searchView) {
+    //         app.searchView = new app.views.SearchBookView();
+    //     }
+    //     var myview = app.searchView.render().el;
+    //     $('#app').html(myview);
+    // },
 
     welcome: function () {
         if (!app.randomBooksView) {
