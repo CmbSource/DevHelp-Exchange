@@ -3,8 +3,8 @@ var app = app || {};
 app.routers.AppRouter = Backbone.Router.extend({
 
     routes: {
-        "": "welcome",
-        "menu-item/login": "login",
+        "": "login",
+        "menu-item/welcome": "welcome",
         "menu-item/addbook": "addbook",
         "menu-item/searchbook": "searchbook",
         "edit/:id": "editbook"

@@ -1,22 +1,17 @@
-/*global $,Backbone,_,validateForm,alert,BookListItemView */
-//$(function () {
 var app = app || {};
 
 app.views.LoginView = Backbone.View.extend({
-  //   tagName: "ul",
-  //   className: "login",
 
   initialize: function () {
-    //app.loginResults = new app.collections.LoginCollection();
-    // app.loginResultsView = new app.views.BookListView(); //model in place collection
     console.log("LoginView initialized");
+    localStorage.setItem("auth_token", 0);
+    localStorage.setItem("user", null);
+    console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
   },
 
   render: function () {
     var template = _.template($("#login_template").html());
     this.$el.html(template);
-    // app.loginResults.reset();
-    // this.$el.append(app.loginResultsView.render().el);
     this.delegateEvents({
       "click  #login_submit": "loginUser",
     });
@@ -40,19 +35,27 @@ app.views.LoginView = Backbone.View.extend({
         },
       })
         .done(function (data) {
+
           if (data.status == 200) {
-            app.appRouter.navigate("#", { trigger: true, replace: true });
+            localStorage.setItem("auth_token", 1);
+            localStorage.setItem("user", email);
+            console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
+            //setTimeout(function () {
+              app.appRouter.navigate("#menu-item/welcome", { trigger: true, replace: true });
+            //}, 0);
+
           } else {
-            this.$("#login_userEmail").val("");
-            this.$("#login_password").val();
-            // app.appRouter.navigate("#/menu-item/login", {
-            //   trigger: true,
-            //   replace: true,
-            // });
             alert(data.status + ": " + data.message);
+            localStorage.setItem("auth_token", 0);
+            localStorage.setItem("user", null);
+            setTimeout(function () {
+              location.reload(true);
+            }, 0);
           }
         })
         .fail(function (data) {
+          localStorage.setItem("auth_token", 0);
+          localStorage.setItem("user", null);
           alert("error");
         });
     }
