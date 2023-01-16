@@ -10,13 +10,13 @@
 	<script type="text/javascript" src="js/models/bookitem.js"></script>
 	<script type="text/javascript" src="js/models/login.js"></script>
 	<script type="text/javascript" src="js/views/loginViewer.js?v=2"> </script>
-	<!-- <script type="text/javascript" src="js/views/loginView.js"></script> -->
+	<script type="text/javascript" src="js/views/registerViewer.js"></script>
 	<script type="text/javascript" src="js/views/bookitemform.js"></script>
 	<script type="text/javascript" src="js/views/editbookview.js"></script>
 	<script type="text/javascript" src="js/views/bookitemview.js"></script>
 	<script type="text/javascript" src="js/views/searchbookview.js"></script>
 	<!-- <script type="text/javascript" src="js/routers/approuter.js"></script> -->
-	<script type="text/javascript" src="js/routers/approuter1.js"></script>
+	<script type="text/javascript" src="js/routers/approuter1.js?v=2"></script>
 
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -94,7 +94,7 @@
 	<div class="loginbody">
 		<nav class="nav-auth">
 			<a href="#">Login</a>
-			<a href="#menu-item/searchbook">Register</a>
+			<a href="#menu-item/register">Register</a>
 		</nav>
 		<h2>Login Page</h2><br>
 		<div class="login">
@@ -115,9 +115,35 @@
 		</div>
 	</script>
 
-	<!--end of templates -->
 
-	<!-- <h1>Questionier Website</h1> -->
+	<script type="text/template" id="register_template">
+	<div class="loginbody">
+		<nav class="nav-auth">
+			<a href="#">Login</a>
+			<a href="#menu-item/register">Register</a>
+		</nav>
+		<h2>User Registration</h2><br>
+		<div class="login">
+			<form id="login" method="get" action="register.php">
+				<label><b>User Name</b></label>
+				<input type="text" name="userName" id="register_userName" placeholder="User Name">
+				<br><br>
+				<label><b>User Email</b></label>
+				<input type="text" name="userEmail" id="register_userEmail" placeholder="User Email">
+				<br><br>
+				<label><b>Password</b></label>
+				<input type="Password" name="password" id="register_password" placeholder="Password">
+				<br><br>
+				<input type="button" name="register" id="register_submit" value="Click to Register!">
+				<br><br>
+				<br><br>
+				<!-- Forgot <a href="#">Password</a> -->
+			</form>
+		</div>
+	</div>
+	</script>
+
+	<!--end of templates -->
 	<div class="container">
 		<!-- <ul class="nav nav-pills">
 			<li><a href="#">Login</a></li>

@@ -1,6 +1,6 @@
 var app = app || {};
 
-app.views.LoginView = Backbone.View.extend({
+app.views.LoginViewer = Backbone.View.extend({
 
   initialize: function () {
     console.log("LoginView initialized");

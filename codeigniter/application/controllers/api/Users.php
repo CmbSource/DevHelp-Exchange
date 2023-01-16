@@ -89,6 +89,7 @@ class Users extends \Restserver\Libraries\REST_Controller {
 
         $user=$this->UserManager_Model->RegisterUser($userName, $userEmail, $password);
         $message = [
+            'status' => 200,
             'userEmail' => $userEmail,
             'message' => 'User Created Successfully!'
         ];

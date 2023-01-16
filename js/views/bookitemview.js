@@ -33,7 +33,7 @@ app.views.BookListView = Backbone.View.extend({
     render: function () {
         if (localStorage.getItem("auth_token") == 0) {
             if (!app.loginView) {
-                app.loginView = new app.views.LoginView();
+                app.loginView = new app.views.LoginViewer();
             }
             var myview = app.loginView.render().el;
             this.$el.html(myview);
