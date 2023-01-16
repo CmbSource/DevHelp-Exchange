@@ -15,15 +15,22 @@ app.views.LoginViewer = Backbone.View.extend({
     this.delegateEvents({
       "click  #login_submit": "loginUser",
     });
+    if (localStorage.getItem("auth_token") == 1) {
+      localStorage.setItem("auth_token", 0);
+      localStorage.setItem("user", null);
+      console.log(localStorage.getItem("auth_token") + " * " + localStorage.getItem("user"));
+      location.reload(true);
+    }
+    
+    // 
     return this;
   },
 
   loginUser: function () {
     var email = this.$("#login_userEmail").val();
     var pwd = this.$("#login_password").val();
-    // app.loginResults.reset();
     if (!email || !pwd) {
-      alert("User Email and Password is RequiredE!");
+      alert("User Email and Password is Required!");
     } else {
       $.ajax({
         url: "codeigniter/index.php/api/Users/confirm/",
@@ -41,7 +48,7 @@ app.views.LoginViewer = Backbone.View.extend({
             localStorage.setItem("user", email);
             console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
             //setTimeout(function () {
-              app.appRouter.navigate("#menu-item/welcome", { trigger: true, replace: true });
+              app.appRouter.navigate("#menu-item/home", { trigger: true, replace: true });
             //}, 0);
 
           } else {

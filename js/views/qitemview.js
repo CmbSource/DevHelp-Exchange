@@ -1,21 +1,21 @@
 /*global $,Backbone,_,validateForm,alert,BookListItemView */
 //$(function () {
 var app = app || {};
-app.views.BookListItemView = Backbone.View.extend({
+app.views.QListItemView = Backbone.View.extend({
 
     tagName: "li",
 
     render: function () {
-        var template = _.template($("#bookitem_template").html(), this.model.attributes);
+        var template = _.template($("#qItem_template").html(), this.model.attributes);
         this.$el.html(template);
         return this;
     }
 });
-app.views.BookListView = Backbone.View.extend({
+app.views.QListView = Backbone.View.extend({
 
     tagName: "ul",
 
-    className: "booklist",
+    className: "questionlist",
 
     initialize: function () {
         if (localStorage.getItem("auth_token") == 0) {
@@ -23,8 +23,8 @@ app.views.BookListView = Backbone.View.extend({
         }else{
             var _this = this; //view reference
             this.model.on("reset", this.render, this);
-            this.model.on("add", function (bookitem) {
-                _this.$el.append(new app.views.BookListItemView({model: bookitem}).render().el);
+            this.model.on("add", function (qitem) {
+                _this.$el.append(new app.views.QListItemView({model: qitem}).render().el);
         });
         }
         
@@ -41,8 +41,8 @@ app.views.BookListView = Backbone.View.extend({
             return this;
         } else {
             this.$el.empty();   // empty previous results view
-            _.each(this.model.models, function (bookitem) {
-                this.$el.append(new app.views.BookListItemView({model: bookitem}).render().el);
+            _.each(this.model.models, function (qitem) {
+                this.$el.append(new app.views.QListItemView({model: qitem}).render().el);
             }, this);
             return this;
         }

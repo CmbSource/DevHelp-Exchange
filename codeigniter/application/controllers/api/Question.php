@@ -12,7 +12,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
         $this->load->helper('url');
         $this->load->model('PostManager_Model');
         $this->load->model('QuestionManager_Model');
-        $this->load->model('ReplyManager_Model');
+        // $this->load->model('ReplyManager_Model');
     }
 
     public function questions_get()

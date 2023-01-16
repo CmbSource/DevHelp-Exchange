@@ -14,7 +14,7 @@ app.models.Login = Backbone.Model.extend({
 
 });
 
-app.localStorage.testStore = Backbone.LocalStorage.extend({})
+//app.localStorage.testStore = Backbone.LocalStorage.extend({})
 
 app.collections.LoginCollection = Backbone.Collection.extend({
   model: app.models.Login,
