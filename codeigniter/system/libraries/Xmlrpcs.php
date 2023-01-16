@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2019 - 2022, CodeIgniter Foundation
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @copyright	Copyright (c) 2019 - 2022, CodeIgniter Foundation (https://codeigniter.com/)
- * @license	https://opensource.org/licenses/MIT	MIT License
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
@@ -57,7 +56,7 @@ if ( ! class_exists('CI_Xmlrpc', FALSE))
  * @subpackage	Libraries
  * @category	XML-RPC
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/userguide3/libraries/xmlrpc.html
+ * @link		https://codeigniter.com/user_guide/libraries/xmlrpc.html
  */
 class CI_Xmlrpcs extends CI_Xmlrpc {
 
@@ -340,16 +339,16 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 		//-------------------------------------
 
 		$method_parts = explode('.', $this->methods[$methName]['function']);
-		$objectCall   = ! empty($method_parts[1]);
+		$objectCall = (isset($method_parts[1]) && $method_parts[1] !== '');
 
 		if ($system_call === TRUE)
 		{
-			if ( ! is_callable(array($this, $method_parts[1])))
+			if ( ! is_callable(array($this,$method_parts[1])))
 			{
 				return new XML_RPC_Response(0, $this->xmlrpcerr['unknown_method'], $this->xmlrpcstr['unknown_method']);
 			}
 		}
-		elseif (($objectCall && ( ! method_exists($method_parts[0], $method_parts[1]) OR ! (new ReflectionMethod($method_parts[0], $method_parts[1]))->isPublic()))
+		elseif (($objectCall && ! is_callable(array($method_parts[0], $method_parts[1])))
 			OR ( ! $objectCall && ! is_callable($this->methods[$methName]['function']))
 		)
 		{
@@ -401,13 +400,17 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			}
 			elseif ($this->object === FALSE)
 			{
-				return get_instance()->{$method_parts[1]}($m);
+				return get_instance()->$method_parts[1]($m);
 			}
-
-			return $this->object->{$method_parts[1]}($m);
+			else
+			{
+				return $this->object->$method_parts[1]($m);
+			}
 		}
-
-		return call_user_func($this->methods[$methName]['function'], $m);
+		else
+		{
+			return call_user_func($this->methods[$methName]['function'], $m);
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -496,8 +499,10 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 
 			return new XML_RPC_Response(new XML_RPC_Values($docstring, 'string'));
 		}
-
-		return new XML_RPC_Response(0, $this->xmlrpcerr['introspect_unknown'], $this->xmlrpcstr['introspect_unknown']);
+		else
+		{
+			return new XML_RPC_Response(0, $this->xmlrpcerr['introspect_unknown'], $this->xmlrpcstr['introspect_unknown']);
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -579,7 +584,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			return $this->multicall_error('nomethod');
 		}
 
-		list($scalar_value, $scalar_type) = array(reset($methName->me), key($methName->me));
+		list($scalar_type, $scalar_value) = each($methName->me);
 		$scalar_type = $scalar_type === $this->xmlrpcI4 ? $this->xmlrpcInt : $scalar_type;
 
 		if ($methName->kindOf() !== 'scalar' OR $scalar_type !== 'string')
@@ -599,7 +604,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 			return $this->multicall_error('notarray');
 		}
 
-		list($b, $a) = array(reset($params->me), key($params->me));
+		list($a, $b) = each($params->me);
 
 		$msg = new XML_RPC_Message($scalar_value);
 		for ($i = 0, $numParams = count($b); $i < $numParams; $i++)

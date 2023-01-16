@@ -1,22 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<script type="text/javascript" src="js/lib/jquery-min.js"></script>
 	<script type="text/javascript" src="js/lib/underscore-min.js"></script>
 	<script type="text/javascript" src="js/lib/backbone.js"></script>
 	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>	
-	<script type="text/javascript" src="js/models/bookitem.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+	<!-- <script type="text/javascript" src="js/models/bookitem.js"></script> -->
+	<script type="text/javascript" src="js/models/qitem.js"></script>
+	<script type="text/javascript" src="js/models/login.js"></script>
+	<script type="text/javascript" src="js/views/loginViewer.js?v=2"> </script>
+	<script type="text/javascript" src="js/views/registerViewer.js"></script>
+	<script type="text/javascript" src="js/views/homeViewer.js"></script>
 	<script type="text/javascript" src="js/views/bookitemform.js"></script>
 	<script type="text/javascript" src="js/views/editbookview.js"></script>
-	<script type="text/javascript" src="js/views/bookitemview.js"></script>
+	<!-- <script type="text/javascript" src="js/views/bookitemview.js"></script> -->
+	<script type="text/javascript" src="js/views/qitemview.js"></script>
 	<script type="text/javascript" src="js/views/searchbookview.js"></script>
-	<script type="text/javascript" src="js/routers/approuter.js"></script>
-	
+	<!-- <script type="text/javascript" src="js/routers/approuter.js"></script> -->
+	<script type="text/javascript" src="js/routers/approuter1.js?v=2"></script>
+
 	<link href="css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" href="/w3css/3/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+	<title>Questionier Site</title>
+
 </head>
 
 <body>
+	<header class="main-header">
+		<h1>Questionier Site</h1>
+		<nav>
+			<a href="#">Login</a>
+			<a href="#menu-item/register">Register</a>
+			<a href="#menu-item/home">Home</a>
+			<a href="">About</a>
+			<a href="">Gallery</a>
+			<a href="#">SignOut</a>
+		</nav>
+	</header>
 	<!-- templates -->
 	<script type="text/template" id="addbook_template">
 	<form class="form-horizontal"  id="add_book" method="post" action="#">
@@ -62,26 +86,142 @@
 	<input type="text" class="input-medium search-query" id="searchBook_book_name" placeholder="Book name">
 	<button type="button"  id="booksearch_submit" class="btn">Search</button>
 	</form>
-	</script> 
+	</script>
 
 	<!-- end of search book template -->
 	<script type="text/template" id="bookitem_template">
 	<a href="#edit/<%= id %>" class="btn btn-link"><%= book_name %></a>
 	</script>
 
-	<script type="text/template" id="post_template">
-	<a href="#edit/<%= postId %>" class="btn btn-link"> <%= userEmail %>  </a>
+	<script type="text/template" id="qItem_template">
+		<div class="card">
+			<div class="card-container">
+				<h4><b><a href="#edit/<%= questionId %>" class="btn btn-link"> <%= questionTitle %></a></b></h4> 
+				<p>Q-No: <%= questionId %>   State: <%= questionState %> </p> 
+			</div>
+		</div>
+	<!-- <a href="#edit/<%= questionId %>" class="btn btn-link"> <%= questionId %> <%= questionTitle %> <%= content %> <%= questionState %> </a> -->
+	</script>
+
+	<script type="text/template" id="login_template">
+	<!-- <div>
+		UserEmail <input type="text" id="login_userEmail" placeholder="UserEmail"><br /><br />
+		Password : <input type="password" id="login_password" placeholder="Password"><br /><br />
+		<button id="register_submit">REGISTER</button>
+		<button id="login_submit">Login</button>
+	</div> -->
+
+	<div class="loginbody">
+		<!-- <nav class="nav-auth">
+			<a href="#">Login</a>
+			<a href="#menu-item/register">Register</a>
+		</nav> -->
+		<h2>Login Page</h2><br>
+		<div class="login">
+			<form id="login" method="get" action="login.php">
+				<label><b>User Email</b></label>
+				<input type="text" name="userEmail" id="login_userEmail" placeholder="User Email">
+				<br><br>
+				<label><b>Password</b></label>
+				<input type="Password" name="password" id="login_password" placeholder="Password">
+				<br><br>
+				<input type="button" name="log" id="login_submit" value="Log In Here">
+				<br><br>
+				<input type="checkbox" id="check">
+				<span>Remember me</span>
+				<br><br>
+				<!-- Forgot <a href="#">Password</a> -->
+			</form>
+		</div>
+	</script>
+
+
+	<script type="text/template" id="register_template">
+	<div class="loginbody">
+		<!-- <nav class="nav-auth">
+			<a href="#">Login</a>
+			<a href="#menu-item/register">Register</a>
+		</nav> -->
+		<h2>User Registration</h2><br>
+		<div class="login">
+			<form id="login" method="get" action="register.php">
+				<label><b>User Name</b></label>
+				<input type="text" name="userName" id="register_userName" placeholder="User Name">
+				<br><br>
+				<label><b>User Email</b></label>
+				<input type="text" name="userEmail" id="register_userEmail" placeholder="User Email">
+				<br><br>
+				<label><b>Password</b></label>
+				<input type="Password" name="password" id="register_password" placeholder="Password">
+				<br><br>
+				<input type="button" name="register" id="register_submit" value="Click to Register!">
+				<br><br>
+				<br><br>
+				<!-- Forgot <a href="#">Password</a> -->
+			</form>
+		</div>
+	</div>
+	</script>
+
+	<script type="text/template" id="home_template">
+		<div>
+			<nav class="w3-bar w3-black">
+				<a href="#menu-item/home" class="w3-button w3-bar-item">Home</a>
+				<a href="#" class="w3-button w3-bar-item">SignOut</a>
+				<a href="#tour" class="w3-button w3-bar-item">Tour</a>
+				<a href="#" class="w3-button w3-bar-item">SignOut</a>
+			</nav>
+
+			<section class="w3-container w3-center w3-content" style="max-width:600px">
+				<h2 class="w3-wide">THE BAND</h2>
+				<p class="w3-opacity"><i>We love music</i></p>
+				<p class="w3-justify">We have created a fictional band website. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+			</section>
+
+			<section class="w3-row-padding w3-center w3-light-grey">
+				<article class="w3-third">
+					<p>John</p>
+					<p>John is the smartest.</p>
+				</article>
+				<article class="w3-third">
+					<p>Paul</p>
+					<p>Paul is the prettiest.</p>
+				</article>
+				<article class="w3-third">
+					<p>Ringo</p>
+					<p>Ringo is the funniest.</p>
+				</article>
+			</section>
+			<footer class="w3-container w3-padding-64 w3-center w3-black w3-xlarge">
+				<a href="#"><i class="fa fa-facebook-official"></i></a>
+				<a href="#"><i class="fa fa-pinterest-p"></i></a>
+				<a href="#"><i class="fa fa-twitter"></i></a>
+				<a href="#"><i class="fa fa-flickr"></i></a>
+				<a href="#"><i class="fa fa-linkedin"></i></a>
+				<p class="w3-medium">
+					Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w1761405_Kavindu</a>
+				</p>
+			</footer>
+		</div>
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			window.history.pushState(null, "", window.location.href);
+			window.onpopstate = function () {
+				window.history.pushState(null, "", window.location.href);
+			};
+		});
 	</script>
 
 	<!--end of templates -->
-	
-	<h1>Welcome to Shelfari 1.1 </h1>
 	<div class="container">
-		<ul class="nav nav-pills">
-			<li><a href="#">Books</a></li>
-			<li><a href="#menu-item/addbook">Add Book</a></li>
-			<li><a href="#menu-item/searchbook">Search Book</a></li>
-		</ul>
+		<!-- <ul class="nav nav-pills">
+			<li><a href="#">Login</a></li>
+			<li><a href="#menu-item/welcome">Questions</a></li>
+			<li><a href="#menu-item/addbook">Add Question</a></li>
+			<li><a href="#menu-item/searchbook">Search Question</a></li>
+		</ul> -->
 		<div class="container bs-docs-example" id="app">
 		</div>
 	</div>

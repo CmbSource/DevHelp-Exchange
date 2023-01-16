@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2019 - 2022, CodeIgniter Foundation
+ * Copyright (c) 2014 - 2016, British Columbia Institute of Technology
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,8 @@
  * @package	CodeIgniter
  * @author	EllisLab Dev Team
  * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
- * @copyright	Copyright (c) 2014 - 2019, British Columbia Institute of Technology (https://bcit.ca/)
- * @copyright	Copyright (c) 2019 - 2022, CodeIgniter Foundation (https://codeigniter.com/)
- * @license	https://opensource.org/licenses/MIT	MIT License
+ * @copyright	Copyright (c) 2014 - 2016, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
  * @since	Version 1.0.0
  * @filesource
@@ -47,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @subpackage	Libraries
  * @category	Input
  * @author		EllisLab Dev Team
- * @link		https://codeigniter.com/userguide3/libraries/input.html
+ * @link		https://codeigniter.com/user_guide/libraries/input.html
  */
 class CI_Input {
 
@@ -138,7 +137,7 @@ class CI_Input {
 	 */
 	public function __construct()
 	{
-		$this->_allow_get_array		= (config_item('allow_get_array') !== FALSE);
+		$this->_allow_get_array		= (config_item('allow_get_array') === TRUE);
 		$this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
 		$this->_enable_csrf		= (config_item('csrf_protection') === TRUE);
 		$this->_standardize_newlines	= (bool) config_item('standardize_newlines');
@@ -358,15 +357,14 @@ class CI_Input {
 	 * @param	string		$prefix		Cookie name prefix
 	 * @param	bool		$secure		Whether to only transfer cookies via SSL
 	 * @param	bool		$httponly	Whether to only makes the cookie accessible via HTTP (no javascript)
-	 * @param	string		$samesite	SameSite attribute
 	 * @return	void
 	 */
-	public function set_cookie($name, $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = NULL, $httponly = NULL, $samesite = NULL)
+	public function set_cookie($name, $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE, $httponly = FALSE)
 	{
 		if (is_array($name))
 		{
 			// always leave 'name' in last place, as the loop will break otherwise, due to $$item
-			foreach (array('value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name', 'samesite') as $item)
+			foreach (array('value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name') as $item)
 			{
 				if (isset($name[$item]))
 				{
@@ -390,13 +388,15 @@ class CI_Input {
 			$path = config_item('cookie_path');
 		}
 
-		$secure = ($secure === NULL && config_item('cookie_secure') !== NULL)
-			? (bool) config_item('cookie_secure')
-			: (bool) $secure;
+		if ($secure === FALSE && config_item('cookie_secure') === TRUE)
+		{
+			$secure = config_item('cookie_secure');
+		}
 
-		$httponly = ($httponly === NULL && config_item('cookie_httponly') !== NULL)
-			? (bool) config_item('cookie_httponly')
-			: (bool) $httponly;
+		if ($httponly === FALSE && config_item('cookie_httponly') !== FALSE)
+		{
+			$httponly = config_item('cookie_httponly');
+		}
 
 		if ( ! is_numeric($expire))
 		{
@@ -407,47 +407,7 @@ class CI_Input {
 			$expire = ($expire > 0) ? time() + $expire : 0;
 		}
 
-		isset($samesite) OR $samesite = config_item('cookie_samesite');
-		if (isset($samesite))
-		{
-			$samesite = ucfirst(strtolower($samesite));
-			in_array($samesite, array('Lax', 'Strict', 'None'), TRUE) OR $samesite = 'Lax';
-		}
-		else
-		{
-			$samesite = 'Lax';
-		}
-
-		if ($samesite === 'None' && ! $secure)
-		{
-			log_message('error', $name.' cookie sent with SameSite=None, but without Secure attribute.');
-		}
-
-		if ( ! is_php('7.3'))
-		{
-			$maxage = $expire - time();
-			if ($maxage < 1)
-			{
-				$maxage = 0;
-			}
-
-			$cookie_header = 'Set-Cookie: '.$prefix.$name.'='.rawurlencode($value);
-			$cookie_header .= ($expire === 0 ? '' : '; Expires='.gmdate('D, d-M-Y H:i:s T', $expire)).'; Max-Age='.$maxage;
-			$cookie_header .= '; Path='.$path.($domain !== '' ? '; Domain='.$domain : '');
-			$cookie_header .= ($secure ? '; Secure' : '').($httponly ? '; HttpOnly' : '').'; SameSite='.$samesite;
-			header($cookie_header);
-			return;
-		}
-
-		$setcookie_options = array(
-			'expires' => $expire,
-			'path' => $path,
-			'domain' => $domain,
-			'secure' => $secure,
-			'httponly' => $httponly,
-			'samesite' => $samesite,
-		);
-		setcookie($prefix.$name, $value, $setcookie_options);
+		setcookie($prefix.$name, $value, $expire, $path, $domain, $secure, $httponly);
 	}
 
 	// --------------------------------------------------------------------
@@ -561,7 +521,7 @@ class CI_Input {
 						$netaddr = explode(':', str_replace('::', str_repeat(':', 9 - substr_count($netaddr, ':')), $netaddr));
 						for ($j = 0; $j < 8; $j++)
 						{
-							$netaddr[$j] = intval($netaddr[$j], 16);
+							$netaddr[$i] = intval($netaddr[$j], 16);
 						}
 					}
 					else
@@ -607,7 +567,7 @@ class CI_Input {
 				$which = FILTER_FLAG_IPV6;
 				break;
 			default:
-				$which = 0;
+				$which = NULL;
 				break;
 		}
 

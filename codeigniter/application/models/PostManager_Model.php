@@ -52,15 +52,12 @@ class PostManager_Model extends CI_Model
     }
 
     //Create Post
-    public function createPost($post)
+    public function createPost($userEmail)
     {
         $tab = 'post';
 
         date_default_timezone_set('Asia/Colombo');
-        $createdDate = date('Y-m-d h:i:s');
-
-        $userEmail = $post['userEmail'];
-        
+        $createdDate = date('Y-m-d h:i:s');        
         
         $data = array(
 			'createdDate' => $createdDate,
@@ -120,15 +117,11 @@ class PostManager_Model extends CI_Model
     }
 
     //Create Post
-    public function createQuestion($question)
+    public function createQuestion($userEmail, $questionTitle, $content)
     {
         $tab = 'question';
 
-        $postId = $this->createPost($question);
-
-        $userEmail = $question['userEmail'];
-        $questionTitle = $question['questionTitle'];
-        $content = $question['content'];
+        $postId = $this->createPost($userEmail);
 
         $data = array(
             'postId' => $postId,
@@ -142,7 +135,7 @@ class PostManager_Model extends CI_Model
         return $this->db->insert_id();
     }
 
-    //Delete Post
+    //Delete Question
     public function DeleteQuestion($id)
     {
         $this->db->where('questionId', $id);

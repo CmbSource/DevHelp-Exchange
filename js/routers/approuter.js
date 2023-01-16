@@ -4,9 +4,26 @@ app.routers.AppRouter = Backbone.Router.extend({
 
     routes: {
         "": "welcome",
+        "menu-item/login": "login",
         "menu-item/addbook": "addbook",
         "menu-item/searchbook": "searchbook",
         "edit/:id": "editbook"
+    },
+
+    // login: function () {
+    //     if (!app.loginView) {
+    //         app.loginView = new app.views.LoginView();
+    //     }
+    //     var myview = app.loginView.render().el;
+    //     $('#app').html(myview);
+    // },
+
+    login: function () {
+        if (!app.searchView) {
+            app.searchView = new app.views.SearchBookView();
+        }
+        var myview = app.searchView.render().el;
+        $('#app').html(myview);
     },
 
     welcome: function () {
