@@ -20,6 +20,8 @@ class Question extends \Restserver\Libraries\REST_Controller {
         $questionId = $this->get('questionId');
         $questionList = $this->QuestionManager_Model->getAllQuestions();
         $questions = json_encode($questionList, true);
+
+        //view list of questions
         if ($questionId === NULL)
         {
             if ($questionList)
@@ -34,6 +36,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
                 ], \Restserver\Libraries\REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
             }
         }
+        //find one question
         else {
             $questionId = (int) $questionId;
             if ($questionId <= 0)
@@ -64,6 +67,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
         }
     }
 
+    //create a question
     public function questions_post()
     {
         $userEmail = $this->post('userEmail');
@@ -72,6 +76,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
 
         $qId = $this->PostManager_Model->createQuestion($userEmail, $questionTitle, $content);
         $message = [
+            'status' => 200,
             'questionId' => $qId,
             'message' => 'Question Created Successfully!'
         ];
@@ -88,6 +93,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
     }
 
 
+    //delete a question
     public function questions_delete($questionId)
     {
         
@@ -109,6 +115,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
     }
 
 
+    //find question existance
     private function _question_exists($questionId)
     {
         $questionList = $this->QuestionManager_Model->getAllQuestions();

@@ -6,7 +6,7 @@ app.routers.AppRouter = Backbone.Router.extend({
     "menu-item/register": "register",
     "menu-item/home": "home",
     "menu-item/welcome": "welcome",
-    "menu-item/addbook": "addbook",
+    "menu-item/addQ": "addQ",
     "menu-item/searchbook": "searchbook",
     "edit/:id": "editbook",
   },
@@ -29,7 +29,7 @@ app.routers.AppRouter = Backbone.Router.extend({
 
   home: function () {
     if (!app.randomBooksView) {
-        console.log("teeeeeeest");
+        console.log("home");
       app.questionsView = new app.views.QListView({
         model: new app.collections.QItemCollection(),
       });
@@ -42,6 +42,28 @@ app.routers.AppRouter = Backbone.Router.extend({
         $("#app").html(myview);
       },
     });
+  },
+
+  addQ: function () {
+    if (!app.addQView) {
+        console.log("add");
+      app.addQView = new app.views.AddQuestionViewer({
+        model: new app.models.QItem(),  
+      });
+    }
+    $("#app").html("loading...");
+    for (let i = 0; i < 2; i++) {
+      var myview = app.addQView.render().el;
+    }
+    $("#app").html(myview);
+    // app.questionsView.model.fetch({
+    //   reset: true,
+    //   success: function () {
+    //     var myview = app.addQView.render().el;
+    //     $("#app").html(myview);
+    //   },
+    // });
+    
   },
 
   welcome: function () {

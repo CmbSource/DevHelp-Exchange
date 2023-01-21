@@ -23,9 +23,6 @@ app.models.QItem = Backbone.Model.extend({
             "questionTitle": this.get('questionTitle'),
             "content": this.get('content'),
             "questionState": this.get('questionState')
-            // "book_name": this.get('postId'),
-            // "author": this.get('createdDate'),
-            // "status": this.get('userEmail')
         };
     }
 });

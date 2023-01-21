@@ -4,26 +4,34 @@ app.views.LoginViewer = Backbone.View.extend({
 
   initialize: function () {
     console.log("LoginView initialized");
-    localStorage.setItem("auth_token", 0);
-    localStorage.setItem("user", null);
     console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
+    if (localStorage.getItem("auth_token") == 1) {
+      app.appRouter.navigate("#menu-item/home", { trigger: true, replace: true });
+    } else {
+      localStorage.setItem("auth_token", 0);
+      localStorage.setItem("user", null);
+      console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
+    }
   },
 
   render: function () {
-    var template = _.template($("#login_template").html());
-    this.$el.html(template);
-    this.delegateEvents({
-      "click  #login_submit": "loginUser",
-    });
+    console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
     if (localStorage.getItem("auth_token") == 1) {
-      localStorage.setItem("auth_token", 0);
-      localStorage.setItem("user", null);
-      console.log(localStorage.getItem("auth_token") + " * " + localStorage.getItem("user"));
-      location.reload(true);
-    }
-    
-    // 
-    return this;
+      app.appRouter.navigate("#menu-item/home", { trigger: true, replace: true });
+    } else {
+      var template = _.template($("#login_template").html());
+      this.$el.html(template);
+      this.delegateEvents({
+        "click  #login_submit": "loginUser",
+      });
+      if (localStorage.getItem("auth_token") == 1) {
+        localStorage.setItem("auth_token", 0);
+        localStorage.setItem("user", null);
+        console.log(localStorage.getItem("auth_token") + " * " + localStorage.getItem("user"));
+        location.reload(true);
+      }
+      return this;
+    }    
   },
 
   loginUser: function () {
