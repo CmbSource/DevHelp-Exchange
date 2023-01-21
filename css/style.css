@@ -32,7 +32,7 @@ body h1 {
     margin: auto;
     margin: 20 0 0 450px;
     padding: 80px;
-    background: #23463f;
+    background: #195964;
     border-radius: 15px;
 
 }
@@ -40,7 +40,7 @@ body h1 {
 .loginbody h2 {
     text-align: center;
     color: #195964;
-    padding: 20px;
+    padding: 10px;
 }
 
 .loginbody label {
@@ -69,6 +69,7 @@ body h1 {
     width: 300px;
     height: 30px;
     border: none;
+    font-weight: bold;
     border-radius: 17px;
     padding-left: 7px;
     color: blue;
@@ -114,6 +115,7 @@ body h1 {
 #register_submit {
     width: 300px;
     height: 30px;
+    font-weight: bold;
     border: none;
     border-radius: 17px;
     padding-left: 7px;
@@ -127,11 +129,17 @@ body h1 {
     font-family: 'Arial';
 }
 
+ul.questionlist {
+    list-style-type: none;
+}
+
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     width: 80%;
+    height: 100px;
     padding-top: 2%;
+    margin-top: 20px;
     /* list-style-type: none; */
 }
 

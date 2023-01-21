@@ -4,8 +4,6 @@ app.views.RegisterView = Backbone.View.extend({
     
   initialize: function () {
     console.log("RegisterView initialized");
-    localStorage.setItem("auth_token", 0);
-    localStorage.setItem("user", null);
     console.log(
       localStorage.getItem("auth_token") + " - " + localStorage.getItem("user")
     );
@@ -41,6 +39,8 @@ app.views.RegisterView = Backbone.View.extend({
         .done(function (data) {
           if (data.status == 200) {
             alert(data.message);
+            localStorage.setItem("auth_token", 0);
+            localStorage.setItem("user", null);
             setTimeout(function () {
               app.appRouter.navigate("#", { trigger: true, replace: true });
             }, 0);
