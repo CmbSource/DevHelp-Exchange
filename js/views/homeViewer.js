@@ -4,6 +4,7 @@ app.views.HomeViewer = Backbone.View.extend({
 
   initialize: function () {
     console.log("HomeView initialized");
+    location.reload(true);
     console.log(localStorage.getItem("auth_token") + " - " + localStorage.getItem("user"));
     if (localStorage.getItem("auth_token") == 0) {
         if (!app.loginView) {

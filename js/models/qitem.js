@@ -9,7 +9,8 @@ app.models.QItem = Backbone.Model.extend({
         userEmail: "",
         questionTitle: "",
         content: "",
-        questionState: ""
+        questionState: "",
+        replyList: app.collections.ReplyItemCollection,
     },
 
     url: function () {
@@ -22,10 +23,7 @@ app.models.QItem = Backbone.Model.extend({
             "userEmail": this.get('userEmail'),
             "questionTitle": this.get('questionTitle'),
             "content": this.get('content'),
-            "questionState": this.get('questionState')
-            // "book_name": this.get('postId'),
-            // "author": this.get('createdDate'),
-            // "status": this.get('userEmail')
+            "questionState": this.get('questionState'),
         };
     }
 });

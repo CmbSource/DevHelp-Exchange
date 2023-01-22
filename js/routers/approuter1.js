@@ -6,7 +6,7 @@ app.routers.AppRouter = Backbone.Router.extend({
     "menu-item/register": "register",
     "menu-item/home": "home",
     "menu-item/welcome": "welcome",
-    "menu-item/addbook": "addbook",
+    "menu-item/addQ": "addQ",
     "menu-item/searchbook": "searchbook",
     "edit/:id": "editbook",
   },
@@ -29,7 +29,7 @@ app.routers.AppRouter = Backbone.Router.extend({
 
   home: function () {
     if (!app.randomBooksView) {
-        console.log("teeeeeeest");
+      console.log("home");
       app.questionsView = new app.views.QListView({
         model: new app.collections.QItemCollection(),
       });
@@ -42,6 +42,27 @@ app.routers.AppRouter = Backbone.Router.extend({
         $("#app").html(myview);
       },
     });
+  },
+
+  addQ: function () {
+    if (!app.addQView) {
+      console.log("add");
+      app.addQView = new app.views.AddQuestionViewer({
+        model: new app.models.QItem(),
+      });
+    }
+    $("#app").html("loading...");
+    for (let i = 0; i < 2; i++) {
+      var myview = app.addQView.render().el;
+    }
+    $("#app").html(myview);
+    // app.questionsView.model.fetch({
+    //   reset: true,
+    //   success: function () {
+    //     var myview = app.addQView.render().el;
+    //     $("#app").html(myview);
+    //   },
+    // });
   },
 
   welcome: function () {
@@ -78,18 +99,40 @@ app.routers.AppRouter = Backbone.Router.extend({
     $("#app").html(myview);
   },
 
-  editbook: function (id) {
+  editbook: async function (id) {
     if (!isNaN(id) && id !== 0) {
-      var book = new app.models.QItem({ id: id });
-      var url = book.url() + book.get("id");
-      app.editBookView = new app.views.EditBookView({ model: book });
-      book.fetch({
-        url: url,
-        success: function (model, response, options) {
-          var myview = app.editBookView.render().el;
-          $("#app").html(myview);
-        },
+      var qData;
+      var rData;
+      var reply;
+      var replyCollection;
+      var url = "/questionier/codeigniter/index.php/api/Question/questions/";
+      console.log("urlllll: " + url);
+      await this.getSingleQuestion(url, {
+        questionId: id,
+      }).then((questionData) => {
+        qData = questionData;
+        console.log(qData);
       });
+      var replyUrl = "/questionier/codeigniter/index.php/api/Question/replies/";
+      await this.getSingleQuestion(replyUrl, {
+        questionId: id,
+      }).then((replyData) => {
+        rData = replyData
+        replyCollection = new app.collections.ReplyItemCollection(rData);
+        // alert(replyCollection)
+      });
+      var question = new app.models.QItem(qData);
+
+      app.editBookView = new app.views.EditBookView({model : question, collections : replyCollection});
+      var myview = app.editBookView.render().el;
+      $('#app').html(myview);
     }
+  },
+
+  getSingleQuestion: async function (url, params) {
+    const response = await fetch(url + "?" + new URLSearchParams(params));
+    const data = await response.json();
+
+    return data;
   },
 });

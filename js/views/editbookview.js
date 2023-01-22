@@ -4,79 +4,129 @@
 */
 var app = app || {};
 app.views.EditBookView = Backbone.View.extend({
-//almost smiliar to bookitemform view
-    initialize: function () {
-        console.log("EditBookView initialized");
-    },
+  tagName: "ui",
 
-    render: function () {
-        var template = _.template($("#addbook_template").html(), this.model.attributes);
-        this.$el.html(template);
-        this.$(".heading").html("Edit Book");
-        this.$(".addbook_status").val(this.model.get("status"));
-        this.delegateEvents({
-            'click #addbook_button': 'saveB',
-            'click #deletebook_button': 'deleteB'
+  className: "questionReply",
+
+  initialize: function () {
+    console.log("EditBookView initialized");
+  },
+
+  render: function () {
+    var template = _.template(
+      $("#viewQuestion_template").html(),
+      this.model.attributes
+    );
+    this.$el.html(template);
+    console.log(this.model);
+    this.options.collections.models.forEach((element) => {
+      console.log(element);
+    });
+    // this.$el.empty(); // empty previous results view
+    _.each(
+      this.options.collections.models,
+      function (replyItem) {
+        this.$el.append(
+          new app.views.ReplyListItemView({ model: replyItem }).render().el
+        );
+      },
+      this
+    );
+
+    this.delegateEvents({
+      "click  #reply_submit": "replyAdd",
+    });
+    return this;
+  },
+
+  replyAdd: function (params) {
+    var email = localStorage.getItem("user");
+    var replyBody = this.$("#reply").val();
+    var questionId = this.model.attributes.questionId;
+    if (!replyBody) {
+      alert("Reply box is empty!");
+    } else {
+      $.ajax({
+        url: "codeigniter/index.php/api/Question/replies/",
+        type: "POST",
+        dataType: "json",
+        data: {
+          userEmail: email,
+          questionId: questionId,
+          content: replyBody,
+        },
+      })
+        .done(function (data) {
+          if (data.status == 200) {
+            alert(data.message);
+            setTimeout(function () {
+              location.reload(true);
+            }, 0);
+          } else {
+            alert(data.status + ": " + data.message);
+            setTimeout(function () {
+              location.reload(true);
+            }, 0);
+          }
+        })
+        .fail(function (data) {
+          alert("error");
+          setTimeout(function () {
+            location.reload(true);
+          }, 0);
         });
-        return this;
-    },
-    saveB: function (e) {
-        e.preventDefault();
-        e.stopPropagation(); // prevent default form submission action
-        var book = validateForm();
-        if (!book) {
-            alert("Please fill in the details");
-        } else {
-            var attr = this.model.changedAttributes(book);   //get attributes which user has edited
-            if (!attr) {   //if user has not edited anyfields
-                alert("Update something to save");
-            } else {
-                this.model.set(book);
-                var url = this.model.url() + this.model.get("id");
-                this.model.save(attr, {"url": url,
-                    patch: true,  //send patch request to update only changed attributes
-                    success: function (model, response) {
-                        if (response.result) { alert("Book updated successfully"); }
-                        app.appRouter.navigate("#", {trigger: true, replace: true});
-                    },
-                    error: function (model, response) {
-                        alert("failed to save");
-                        app.appRouter.navigate("#", {trigger: true, replace: true}); //triger router event and not stored in history
-                    }
-                    });
-            }
-        }
-    },
-    deleteB: function () {   //delete reserved word for future ecmascript
-        var book = validateForm();
-        if (!book) {
-            alert("Some fields not set");
-        } else {
-            var attr = this.model.changedAttributes(book);
-            if (attr &&
-                    confirm("You have made some changes,would you still like to delete it?")
-                    ) { // asks for confirmation for delete after changes
-                this.deletebook();
-            } else if (!attr) {// direct delete
-                this.deletebook();
-            }
-
-        }
-    },
-    //non-event func
-    deletebook: function () {
-        var url = this.model.url() + this.model.get("id");
-        this.model.destroy({wait: true, "url": url,
-            success: function (model, response, options) {
-                if (response.result) {
-                    alert("Book deleted successfully");
-                    app.appRouter.navigate("#", {trigger: true, replace: true});
-                } else {alert("Failed to delete"); }
-            },
-            error: function (model, response, options) {
-                alert("Failed to save");
-            }
-            });
     }
+  },
 });
-//});
+
+app.views.ReplyListItemView = Backbone.View.extend({
+  tagName: "li",
+
+  className: "replyItem",
+
+  render: function () {
+    var template = _.template(
+      $("#ReplyItem_template").html(),
+      this.model.attributes
+    );
+    this.$el.html(template);
+    // if (this.model.attributes.questionState == "Answered") {
+    //   this.$(".card").css("background-color", "#b1dd9a");
+    // }
+    // if (localStorage.getItem("user") == this.model.attributes.userEmail) {
+    //   this.$("#deleteQuestion_submit").css("color", "red");
+    // } else {
+    //   this.$("#deleteQuestion_submit").prop("disabled", true);
+    // }
+    // this.delegateEvents({
+    //   "click  #deleteQuestion_submit": "questionDelete",
+    // });
+    return this;
+  },
+});
+
+app.views.ReplyListView = Backbone.View.extend({
+  tagName: "ul",
+
+  className: "replylist",
+
+  initialize: function () {
+    var _this = this; //view reference
+  },
+
+  render: function () {
+    this.$el.empty(); // empty previous results view
+    var _count = 0;
+    _.each(
+      this.options.collections.models,
+      function (replyItem) {
+        _count++;
+        this.$el.append(
+          new app.views.ReplyListItemView({ model: replyItem }).render().el
+        );
+      },
+      this
+    );
+    return this;
+  },
+});

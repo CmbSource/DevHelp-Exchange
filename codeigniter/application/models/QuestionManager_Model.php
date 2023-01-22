@@ -47,7 +47,7 @@ class QuestionManager_Model extends CI_Model
     {
         $this->db->select("questionId,userEmail,questionTitle,content,questionState");
         $this->db->order_by("questionId");
-        $this->db->limit(10);
+        $this->db->limit(20);
         $query = $this->db->get($this->table_question);
         return $query->result();
     }
