@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="js/views/registerViewer.js"></script>
 	<script type="text/javascript" src="js/views/homeViewer.js"></script>
 	<script type="text/javascript" src="js/views/bookitemform.js"></script>
-	<script type="text/javascript" src="js/views/editbookview.js?v=2"></script>
+	<script type="text/javascript" src="js/views/editbookview.js?v=3"></script>
 	<!-- <script type="text/javascript" src="js/views/bookitemview.js"></script> -->
 	<script type="text/javascript" src="js/views/qitemview.js"></script>
 	<script type="text/javascript" src="js/views/searchbookview.js"></script>
@@ -187,6 +187,37 @@
 			<div class="card-container">
 				<h4><b><a href="#edit/<%= questionId %>" class="btn btn-link"> <%= questionTitle %></a></b><span style="float : right;"> <button class="btn" id="deleteQuestion_submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></h4> 
 				<p>Q-No: <%= questionId %>  <span style="float : right;"> State: <%= questionState %> </span> </p> 
+
+			</div>
+		</div>
+	</script>
+	
+	<script type="text/template" id="viewQuestion_template">
+		<div class="cardMaster">
+			<div class="card-container">
+				<h3><b> <%= questionTitle %></b><span style="float : right;"> <button class="btn" id="editQuestion_submit"><i class="fa fa-pencil" aria-hidden="true"></i></button></h3>  
+				<p><%= content %></p> <br/>
+			    <p>Q-No: <%= questionId %>  <span style="float : right;"> State: <%= questionState %> </span> </p> 			
+			</div>
+			<form>
+			<ul class="reply-add">
+				<li>
+					<label>Add your reply <span class="required"><i class="fa fa-pencil" aria-hidden="true"></i></span></label>
+					<textarea name="reply" id="reply" class="field-reply field-textarea"></textarea>
+				</li>
+				<li>
+					<span style="float : right; padding-right: 40px; padding-top: 20px"><input type="button" name="replyAdd" id="reply_submit" value="Submit" />
+				</li>
+			</ul>
+			</form>
+		</div>
+	</script>
+
+	<script type="text/template" id="ReplyItem_template">
+		<div class="card">
+			<div class="card-container">
+				<h4><b><a href="#edit/<%= replyId %>" class="btn btn-link"> <%= content %></a></b><span style="float : right;"> <button class="btn" id="deleteQuestion_submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></h4> 
+				<p><label id="copyReply"><i class="fa fa-clone" aria-hidden="true"></i></label><span style="float : right;"> State: <%= replyState %> </span> </p> 
 
 			</div>
 		</div>

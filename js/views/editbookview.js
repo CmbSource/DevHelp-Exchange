@@ -4,7 +4,7 @@
 */
 var app = app || {};
 app.views.EditBookView = Backbone.View.extend({
-  tagName: "div",
+  tagName: "ui",
 
   className: "questionReply",
 
@@ -14,27 +14,82 @@ app.views.EditBookView = Backbone.View.extend({
 
   render: function () {
     var template = _.template(
-      $("#addquestion_template").html(),
+      $("#viewQuestion_template").html(),
       this.model.attributes
     );
+    this.$el.html(template);
     console.log(this.model);
     this.options.collections.models.forEach((element) => {
       console.log(element);
     });
-    this.$el.html(template);
+    // this.$el.empty(); // empty previous results view
+    _.each(
+      this.options.collections.models,
+      function (replyItem) {
+        this.$el.append(
+          new app.views.ReplyListItemView({ model: replyItem }).render().el
+        );
+      },
+      this
+    );
+
+    this.delegateEvents({
+      "click  #reply_submit": "replyAdd",
+    });
     return this;
+  },
+
+  replyAdd: function (params) {
+    var email = localStorage.getItem("user");
+    var replyBody = this.$("#reply").val();
+    var questionId = this.model.attributes.questionId;
+    if (!replyBody) {
+      alert("Reply box is empty!");
+    } else {
+      $.ajax({
+        url: "codeigniter/index.php/api/Question/replies/",
+        type: "POST",
+        dataType: "json",
+        data: {
+          userEmail: email,
+          questionId: questionId,
+          content: replyBody,
+        },
+      })
+        .done(function (data) {
+          if (data.status == 200) {
+            alert(data.message);
+            setTimeout(function () {
+              location.reload(true);
+            }, 0);
+          } else {
+            alert(data.status + ": " + data.message);
+            setTimeout(function () {
+              location.reload(true);
+            }, 0);
+          }
+        })
+        .fail(function (data) {
+          alert("error");
+          setTimeout(function () {
+            location.reload(true);
+          }, 0);
+        });
+    }
   },
 });
 
 app.views.ReplyListItemView = Backbone.View.extend({
   tagName: "li",
 
+  className: "replyItem",
+
   render: function () {
     var template = _.template(
-      $("#qItem_template").html(),
+      $("#ReplyItem_template").html(),
       this.model.attributes
     );
-    // this.$el.html(template);
+    this.$el.html(template);
     // if (this.model.attributes.questionState == "Answered") {
     //   this.$(".card").css("background-color", "#b1dd9a");
     // }
@@ -57,19 +112,15 @@ app.views.ReplyListView = Backbone.View.extend({
 
   initialize: function () {
     var _this = this; //view reference
-    this.model.on("reset", this.render, this);
-    this.model.on("add", function (replyItem) {
-      _this.$el.append(
-        new app.views.ReplyListItemView({ model: replyItem }).render().el
-      );
-    });
   },
 
   render: function () {
     this.$el.empty(); // empty previous results view
+    var _count = 0;
     _.each(
       this.options.collections.models,
       function (replyItem) {
+        _count++;
         this.$el.append(
           new app.views.ReplyListItemView({ model: replyItem }).render().el
         );

@@ -133,6 +133,10 @@ ul.questionlist {
     list-style-type: none;
 }
 
+li.replyItem{
+    list-style-type: none;
+}
+
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -141,6 +145,15 @@ ul.questionlist {
     padding-top: 2%;
     margin-top: 20px;
     /* list-style-type: none; */
+}
+
+.cardMaster {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 80%;
+    height: 300px;
+    padding-top: 2%;
+    margin-top: 20px;
 }
 
 .card:hover {
@@ -279,4 +292,12 @@ select{
 }
 .form-style-1 .required{
 	color:red;
+}
+
+.reply-add{
+    list-style-type: none;
+}
+
+.field-reply {
+    width: 95%;
 }
