@@ -1,10 +1,11 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
 
-class Question extends \Restserver\Libraries\REST_Controller {
+class Question extends \Restserver\Libraries\REST_Controller
+{
 
     function __construct()
     {
@@ -12,7 +13,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
         $this->load->helper('url');
         $this->load->model('PostManager_Model');
         $this->load->model('QuestionManager_Model');
-        // $this->load->model('ReplyManager_Model');
+        $this->load->model('ReplyManager_Model');
     }
 
     public function questions_get()
@@ -22,14 +23,10 @@ class Question extends \Restserver\Libraries\REST_Controller {
         $questions = json_encode($questionList, true);
 
         //view list of questions
-        if ($questionId === NULL)
-        {
-            if ($questionList)
-            {
+        if ($questionId === NULL) {
+            if ($questionList) {
                 $this->response($questionList, \Restserver\Libraries\REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-            }
-            else
-            {
+            } else {
                 $this->response([
                     'status' => FALSE,
                     'message' => 'No Questions were found'
@@ -39,26 +36,21 @@ class Question extends \Restserver\Libraries\REST_Controller {
         //find one question
         else {
             $questionId = (int) $questionId;
-            if ($questionId <= 0)
-            {
+            if ($questionId <= 0) {
                 $this->response(NULL, \Restserver\Libraries\REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
             }
             $post = NULL;
-            if (!empty($questionList))
-            {
-                for ($i=0; $i < sizeof($questionList); $i++) { 
+            if (!empty($questionList)) {
+                for ($i = 0; $i < sizeof($questionList); $i++) {
                     if ($questionList[$i]->questionId == $questionId) {
                         $post = $questionList[$i];
                     }
                 }
             }
 
-            if (!empty($post))
-            {
+            if (!empty($post)) {
                 $this->set_response($post, \Restserver\Libraries\REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-            }
-            else
-            {
+            } else {
                 $this->set_response([
                     'status' => FALSE,
                     'message' => 'Question could not be found'
@@ -88,7 +80,7 @@ class Question extends \Restserver\Libraries\REST_Controller {
     {
         $id = $this->delete('id');
         echo $id;
-       
+
         $this->response(['Item deleted successfully.'], \Restserver\Libraries\REST_Controller::HTTP_OK);
     }
 
@@ -96,9 +88,8 @@ class Question extends \Restserver\Libraries\REST_Controller {
     //delete a question
     public function questions_delete($questionId)
     {
-        
-        if ($this->_question_exists($questionId) < 0)
-        {
+
+        if ($this->_question_exists($questionId) < 0) {
             $this->response([
                 'status' => FALSE,
                 'message' => 'Invalid Question ID'
@@ -111,7 +102,51 @@ class Question extends \Restserver\Libraries\REST_Controller {
         $this->response([
             'status' => TRUE,
             'message' => 'Question was deleted'
-            ], \Restserver\Libraries\REST_Controller::HTTP_OK);
+        ], \Restserver\Libraries\REST_Controller::HTTP_OK);
+    }
+
+    public function replies_get()
+    {
+        $questionId = $this->get('questionId');
+        // $questionList = $this->QuestionManager_Model->getAllQuestions();
+        $repliesList = $this->ReplyManager_Model->getAllRepliesToQ($questionId);
+        $replies = json_encode($repliesList, true);
+
+        //view list of questions
+
+        if ($repliesList) {
+            $this->response($repliesList, \Restserver\Libraries\REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No Questions were found'
+            ], \Restserver\Libraries\REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
+    public function replies_post()
+    {
+        $userEmail = $this->post('userEmail');
+        $questionId = $this->post('questionId');
+        $content = $this->post('content');
+
+
+        if ($this->_question_exists($questionId) < 0) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Invalid Question ID'
+            ], \Restserver\Libraries\REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+        } else {
+            $repId = $this->ReplyManager_Model->createReply($userEmail, $content, $questionId);
+            $message = [
+                'status' => 200,
+                'replyId' => $repId,
+                'message' => 'Reply Created Successfully!'
+            ];
+    
+            $this->set_response($message, \Restserver\Libraries\REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+        }
+        
     }
 
 
@@ -120,9 +155,8 @@ class Question extends \Restserver\Libraries\REST_Controller {
     {
         $questionList = $this->QuestionManager_Model->getAllQuestions();
         $count = 0;
-        if (!empty($questionList))
-        {
-            for ($i=0; $i < sizeof($questionList); $i++) { 
+        if (!empty($questionList)) {
+            for ($i = 0; $i < sizeof($questionList); $i++) {
                 if ($questionList[$i]->questionId == $questionId) {
                     $count = 1;
                     break;

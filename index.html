@@ -9,12 +9,13 @@
 	<script type="text/javascript" src="js/app.js"></script>
 	<!-- <script type="text/javascript" src="js/models/bookitem.js"></script> -->
 	<script type="text/javascript" src="js/models/qitem.js"></script>
+	<script type="text/javascript" src="js/models/replyItem.js"></script>
 	<script type="text/javascript" src="js/models/login.js"></script>
 	<script type="text/javascript" src="js/views/loginViewer.js?v=2"> </script>
 	<script type="text/javascript" src="js/views/registerViewer.js"></script>
 	<script type="text/javascript" src="js/views/homeViewer.js"></script>
 	<script type="text/javascript" src="js/views/bookitemform.js"></script>
-	<script type="text/javascript" src="js/views/editbookview.js"></script>
+	<script type="text/javascript" src="js/views/editbookview.js?v=2"></script>
 	<!-- <script type="text/javascript" src="js/views/bookitemview.js"></script> -->
 	<script type="text/javascript" src="js/views/qitemview.js"></script>
 	<script type="text/javascript" src="js/views/searchbookview.js"></script>
@@ -116,9 +117,24 @@
 
 
 	<script type="text/template" id="addbook_template">
-	<form class="form-horizontal"  id="add_book" method="post" action="#">
+		<form>
+			<ul class="form-style-1">
+				<li>
+					<label>Question Title <span class="required">*</span></label>
+					<input type="text" name="field3" id="qTitle" class="field-long" />
+				</li>
+				<li> <br/> </li>
+				<li>
+					<label>Question Description <span class="required">*</span></label>
+					<textarea name="field5" id="field5" class="field-long field-textarea"></textarea>
+				</li>
+				<li>
+					<input type="button" name="qAdd" id="question_submit" value="Submit" />
+				</li>
+			</ul>
+			</form>
+	<!-- <form class="form-horizontal"  id="add_book" method="post" action="#">
 	<legend class="heading"></legend>
-	<!-- book name-->
 	<div class="control-group">
 	<label class="control-label" for="addbokinputBookName"><b>Book Name</b></label>
 	<div class="controls">
@@ -151,7 +167,7 @@
 	<button type="button" id="deletebook_button" class="btn">Delete</button>
 	</div>
 	</div>
-	</form>
+	</form> -->
 	</script>
 
 	<script type="text/template" id="searchbook_template">
@@ -169,8 +185,9 @@
 	<script type="text/template" id="qItem_template">
 		<div class="card">
 			<div class="card-container">
-				<h4><b><a href="#edit/<%= questionId %>" class="btn btn-link"> <%= questionTitle %></a></b></h4> 
-				<p>Q-No: <%= questionId %>   State: <%= questionState %> </p> 
+				<h4><b><a href="#edit/<%= questionId %>" class="btn btn-link"> <%= questionTitle %></a></b><span style="float : right;"> <button class="btn" id="deleteQuestion_submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></h4> 
+				<p>Q-No: <%= questionId %>  <span style="float : right;"> State: <%= questionState %> </span> </p> 
+
 			</div>
 		</div>
 	</script>

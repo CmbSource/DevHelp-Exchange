@@ -4,79 +4,78 @@
 */
 var app = app || {};
 app.views.EditBookView = Backbone.View.extend({
-//almost smiliar to bookitemform view
-    initialize: function () {
-        console.log("EditBookView initialized");
-    },
+  tagName: "div",
 
-    render: function () {
-        var template = _.template($("#addbook_template").html(), this.model.attributes);
-        this.$el.html(template);
-        this.$(".heading").html("Edit Book");
-        this.$(".addbook_status").val(this.model.get("status"));
-        this.delegateEvents({
-            'click #addbook_button': 'saveB',
-            'click #deletebook_button': 'deleteB'
-        });
-        return this;
-    },
-    saveB: function (e) {
-        e.preventDefault();
-        e.stopPropagation(); // prevent default form submission action
-        var book = validateForm();
-        if (!book) {
-            alert("Please fill in the details");
-        } else {
-            var attr = this.model.changedAttributes(book);   //get attributes which user has edited
-            if (!attr) {   //if user has not edited anyfields
-                alert("Update something to save");
-            } else {
-                this.model.set(book);
-                var url = this.model.url() + this.model.get("id");
-                this.model.save(attr, {"url": url,
-                    patch: true,  //send patch request to update only changed attributes
-                    success: function (model, response) {
-                        if (response.result) { alert("Book updated successfully"); }
-                        app.appRouter.navigate("#", {trigger: true, replace: true});
-                    },
-                    error: function (model, response) {
-                        alert("failed to save");
-                        app.appRouter.navigate("#", {trigger: true, replace: true}); //triger router event and not stored in history
-                    }
-                    });
-            }
-        }
-    },
-    deleteB: function () {   //delete reserved word for future ecmascript
-        var book = validateForm();
-        if (!book) {
-            alert("Some fields not set");
-        } else {
-            var attr = this.model.changedAttributes(book);
-            if (attr &&
-                    confirm("You have made some changes,would you still like to delete it?")
-                    ) { // asks for confirmation for delete after changes
-                this.deletebook();
-            } else if (!attr) {// direct delete
-                this.deletebook();
-            }
+  className: "questionReply",
 
-        }
-    },
-    //non-event func
-    deletebook: function () {
-        var url = this.model.url() + this.model.get("id");
-        this.model.destroy({wait: true, "url": url,
-            success: function (model, response, options) {
-                if (response.result) {
-                    alert("Book deleted successfully");
-                    app.appRouter.navigate("#", {trigger: true, replace: true});
-                } else {alert("Failed to delete"); }
-            },
-            error: function (model, response, options) {
-                alert("Failed to save");
-            }
-            });
-    }
+  initialize: function () {
+    console.log("EditBookView initialized");
+  },
+
+  render: function () {
+    var template = _.template(
+      $("#addquestion_template").html(),
+      this.model.attributes
+    );
+    console.log(this.model);
+    this.options.collections.models.forEach((element) => {
+      console.log(element);
+    });
+    this.$el.html(template);
+    return this;
+  },
 });
-//});
+
+app.views.ReplyListItemView = Backbone.View.extend({
+  tagName: "li",
+
+  render: function () {
+    var template = _.template(
+      $("#qItem_template").html(),
+      this.model.attributes
+    );
+    // this.$el.html(template);
+    // if (this.model.attributes.questionState == "Answered") {
+    //   this.$(".card").css("background-color", "#b1dd9a");
+    // }
+    // if (localStorage.getItem("user") == this.model.attributes.userEmail) {
+    //   this.$("#deleteQuestion_submit").css("color", "red");
+    // } else {
+    //   this.$("#deleteQuestion_submit").prop("disabled", true);
+    // }
+    // this.delegateEvents({
+    //   "click  #deleteQuestion_submit": "questionDelete",
+    // });
+    return this;
+  },
+});
+
+app.views.ReplyListView = Backbone.View.extend({
+  tagName: "ul",
+
+  className: "replylist",
+
+  initialize: function () {
+    var _this = this; //view reference
+    this.model.on("reset", this.render, this);
+    this.model.on("add", function (replyItem) {
+      _this.$el.append(
+        new app.views.ReplyListItemView({ model: replyItem }).render().el
+      );
+    });
+  },
+
+  render: function () {
+    this.$el.empty(); // empty previous results view
+    _.each(
+      this.options.collections.models,
+      function (replyItem) {
+        this.$el.append(
+          new app.views.ReplyListItemView({ model: replyItem }).render().el
+        );
+      },
+      this
+    );
+    return this;
+  },
+});
