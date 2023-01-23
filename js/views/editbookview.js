@@ -90,19 +90,56 @@ app.views.ReplyListItemView = Backbone.View.extend({
       this.model.attributes
     );
     this.$el.html(template);
-    // if (this.model.attributes.questionState == "Answered") {
-    //   this.$(".card").css("background-color", "#b1dd9a");
-    // }
+    this.$("#markCorrect_submit").css("color", "#52c715");
+    if (this.model.attributes.replyState == "Answer") {
+      this.$(".card").css("background-color", "#b1dd9a");
+    }
     // if (localStorage.getItem("user") == this.model.attributes.userEmail) {
     //   this.$("#deleteQuestion_submit").css("color", "red");
     // } else {
     //   this.$("#deleteQuestion_submit").prop("disabled", true);
     // }
-    // this.delegateEvents({
-    //   "click  #deleteQuestion_submit": "questionDelete",
-    // });
+    this.delegateEvents({
+      "click  #markCorrect_submit": "markCorrect",
+    });
     return this;
   },
+
+  markCorrect: function () {
+    var questionId = this.model.attributes.questionId;
+    var replyId = this.model.attributes.replyId;
+
+    $.ajax({
+    url: "codeigniter/index.php/api/Question/replystate/",
+    type: "PATCH",
+    dataType: "json",
+    data: {
+      "replyId": replyId,
+      "questionId": questionId
+    },
+    })
+    .done(function (data) {
+        if (data.status == 200) {
+        alert(data.message);
+        setTimeout(function () {
+            location.reload(true);
+        }, 0);
+        } else {
+        alert(data.status + ": " + data.message);
+        setTimeout(function () {
+            location.reload(true);
+        }, 0);
+        }
+    })
+    .fail(function (data) {
+        alert("error");
+        setTimeout(function () {
+        location.reload(true);
+        }, 0);
+    });
+        
+  }
+
 });
 
 app.views.ReplyListView = Backbone.View.extend({

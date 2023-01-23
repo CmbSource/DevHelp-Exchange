@@ -18,29 +18,37 @@ class QuestionManager_Model extends CI_Model
      */
 
     //Get Question by id
-    public function  getQuestionById($id)
+    public function getQuestionById($id)
     {
-        if(is_numeric($id)) {
+        if (is_numeric($id)) {
             $this->db->where('questionId', $id);
             $query = $this->db->get($this->table_question);
             return $query->row(0);
-        }
-        else
+        } else
             return null;
     }
 
     //Get Post Id by id
-    public function  getPostIdById($id)
+    public function getPostIdById($id)
     {
-        if(is_numeric($id)) {
+        if (is_numeric($id)) {
             $this->db->select("postId");
             $this->db->where('questionId', $id);
             $query = $this->db->get($this->table_question);
             return $query->row(0);
-        }
-        else
+        } else
             return null;
     }
+
+    public function getQuestionbyName($questionTitle)
+    {
+        $this->db->where('questionTitle', $questionTitle);
+        $query = $this->db->get($this->table_question);
+        
+        return $query->row(0);
+    }
+
+
 
     //Get All Questions
     public function getAllQuestions()
@@ -61,13 +69,13 @@ class QuestionManager_Model extends CI_Model
 
         $data = array(
             'postId' => $postId,
-			'userEmail' => $userEmail,
+            'userEmail' => $userEmail,
             'questionTitle' => $questionTitle,
-			'content' => $content,
+            'content' => $content,
             'questionState' => 'Not Answered'
-		);
+        );
 
-        $insertQuery=$this->db->insert($tab, $data);
+        $insertQuery = $this->db->insert($tab, $data);
         return $this->db->insert_id();
     }
 
@@ -77,6 +85,17 @@ class QuestionManager_Model extends CI_Model
         $this->db->where('questionId', $id);
         $query = $this->db->delete($this->table_question);
         return $query;
+    }
+
+    public function stateUpdateQuestion($questionId)
+    {
+        $tab = 'question';
+
+        $this->db->where('questionId', $questionId);
+        $this->db->update($tab, array('questionState' => 'Answered'));
+        return $questionId;
+
+
     }
 
 

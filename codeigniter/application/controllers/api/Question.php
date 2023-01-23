@@ -59,6 +59,17 @@ class Question extends \Restserver\Libraries\REST_Controller
         }
     }
 
+    public function questionbyTitle_post()
+    {
+        $questionTitle = $this->post('questionTitle');
+
+        $data = $this->QuestionManager_Model->getQuestionbyName($questionTitle);
+        
+
+        $this->set_response($data, \Restserver\Libraries\REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
+    }
+
+
     //create a question
     public function questions_post()
     {
@@ -149,6 +160,24 @@ class Question extends \Restserver\Libraries\REST_Controller
         
     }
 
+    public function replystate_patch()
+    {
+        $replyId = $this->patch('replyId');
+        $questionId = $this->patch('questionId');
+
+        $repId = $this->ReplyManager_Model->stateUpdateReply($replyId);
+        $qId = $this->QuestionManager_Model->stateUpdateQuestion($questionId);
+        $message = [
+            'status' => 200,
+            'replyId' => $repId,
+            'questionId' => $qId,
+            'message' => 'Reply State Changed Successfully!'
+        ];
+
+        $this->set_response($message, \Restserver\Libraries\REST_Controller::HTTP_CREATED);
+
+    }
+
 
     //find question existance
     private function _question_exists($questionId)
@@ -165,5 +194,7 @@ class Question extends \Restserver\Libraries\REST_Controller
         }
         return $count;
     }
+
+    
 
 }

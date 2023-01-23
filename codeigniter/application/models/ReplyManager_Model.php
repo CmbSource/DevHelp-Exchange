@@ -42,6 +42,17 @@ class ReplyManager_Model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function stateUpdateReply($replyId)
+    {
+        $tab = 'reply';
+
+        $this->db->where('replyId', $replyId);
+        $this->db->update($tab, array('replyState' => 'Answer'));
+        return $replyId;
+
+
+    }
+
 }
 
 ?>

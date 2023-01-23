@@ -38,15 +38,15 @@
 			<a href="#menu-item/register">Register</a>
 			<a href="#menu-item/home">Home</a>
 			<a href="#menu-item/addQ">Ask Question</a>
-			<a href="">Find a Question</a>
+			<a href="#menu-item/searchQ">Find a Question</a>
 			<a href="javascript:signOut();">SignOut</a>
 		</nav>
 	</header>
 
 	<script>
-		function signOut(value){
+		function signOut(value) {
 			localStorage.setItem("auth_token", 0);
-            localStorage.setItem("user", null);
+			localStorage.setItem("user", null);
 			app.appRouter.navigate("#", { trigger: true, replace: true });
 		}
 	</script>
@@ -172,7 +172,7 @@
 
 	<script type="text/template" id="searchbook_template">
 	<form class="form-search" id="searchbook">
-	<input type="text" class="input-medium search-query" id="searchBook_book_name" placeholder="Book name">
+	<input type="text" class="input-medium search-query" id="searchBook_book_name" placeholder="Enter Question Title">
 	<button type="button"  id="booksearch_submit" class="btn">Search</button>
 	</form>
 	</script>
@@ -191,7 +191,7 @@
 			</div>
 		</div>
 	</script>
-	
+
 	<script type="text/template" id="viewQuestion_template">
 		<div class="cardMaster">
 			<div class="card-container">
@@ -217,13 +217,14 @@
 		<div class="card">
 			<div class="card-container">
 				<h4><b><a href="#edit/<%= replyId %>" class="btn btn-link"> <%= content %></a></b><span style="float : right;"> <button class="btn" id="deleteQuestion_submit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></h4> 
-				<p><label id="copyReply"><i class="fa fa-clone" aria-hidden="true"></i></label><span style="float : right;"> State: <%= replyState %> </span> </p> 
+				<br/><br/><br/>	
+				<p><button class="btn" id="markCorrect_submit"><i class="fa fa-check" aria-hidden="true"></i></button><span style="float : right;"> State: <%= replyState %> </span> </p> 
 
 			</div>
 		</div>
 	</script>
 
-	
+
 
 	<script type="text/javascript">
 		$(document).ready(function () {
