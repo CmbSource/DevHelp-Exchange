@@ -7,7 +7,7 @@ app.routers.AppRouter = Backbone.Router.extend({
     "menu-item/home": "home",
     "menu-item/welcome": "welcome",
     "menu-item/addQ": "addQ",
-    "menu-item/searchbook": "searchbook",
+    "menu-item/searchQ": "searchbook",
     "edit/:id": "editbook",
   },
 

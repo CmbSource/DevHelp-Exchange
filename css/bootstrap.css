@@ -1305,7 +1305,8 @@ textarea::-webkit-input-placeholder {
 }
 
 .input-medium {
-  width: 150px;
+  width: 750px;
+  height: 100px;
 }
 
 .input-large {
