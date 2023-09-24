@@ -1,6 +1,6 @@
-# Questioner Website
+# DevHelp-Exchange Website
 
-This repository contains the code for a Questioner website, similar to Stack Overflow. The website is built using JavaScript and CSS for the frontend, PHP with the CodeIgniter framework for the backend, and MySQL for the database.
+This repository contains the code for a DevHelp-Exchange Questioner website, similar to Stack Overflow. The website is built using JavaScript and CSS for the frontend, PHP with the CodeIgniter framework for the backend, and MySQL for the database.
 
 ## Features
 
